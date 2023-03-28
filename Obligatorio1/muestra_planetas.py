@@ -49,12 +49,16 @@ import numpy as np
 # ========================================
 file_in = "planetas_salida.dat" # Nombre del fichero de datos
 file_out = "planetas" # Nombre del fichero de salida (sin extensión)
+file_radius = "radios.dat"
 
 # Límites de los ejes X e Y
-x_min = -50
-x_max = 50
-y_min = -50 
-y_max = 50
+x_min = -40
+x_max = 40
+y_min = -40 
+y_max = 40
+
+scroll = 0.03
+max_scroll = 1.0
 
 interval = 100 # Tiempo entre fotogramas en milisegundos
 show_trail = True # Muestra la "estela" del planeta
@@ -104,6 +108,12 @@ for frame_data_str in data_str.split("\n\n"):
 nplanets = len(frames_data[0])
 
 
+#Leemos los radios.
+data = np.genfromtxt(file_radius, delimiter='\t', dtype='str')
+planet_radius = data[:, 1].astype(float)
+planet_names = data[:, 0].astype(str)
+for a, r in enumerate(planet_radius):
+    planet_radius[a] = r
 # Creación de la animación/gráfico
 # ========================================
 # Crea los objetos figure y axis
@@ -131,32 +141,46 @@ else:
 # al punto en una lista
 planet_points = list()
 planet_trails = list()
+planet_labels = list()
+planet_n = 0
 for planet_pos, radius in zip(frames_data[0], planet_radius):
     x, y = planet_pos
     #planet_point, = ax.plot(x, y, "o", markersize=10)
     planet_point = Circle((x, y), radius)
     ax.add_artist(planet_point)
     planet_points.append(planet_point)
+    planet_labels.append(plt.text(x,y, planet_names[planet_n], fontsize=5, horizontalalignment='center'))
 
     # Inicializa las estelas (si especificado en los parámetros)
     if show_trail:
         planet_trail, = ax.plot(
-                x, y, "-", linewidth=trail_width,
+                x, y, "-", linewidth=radius*4.5,
                 color=planet_points[-1].get_facecolor())
         planet_trails.append(planet_trail)
+    planet_n += 1
  
 # Función que actualiza la posición de los planetas en la animación 
 def update(j_frame, frames_data, planet_points, planet_trails, show_trail):
+    
     # Actualiza la posición del correspondiente a cada planeta
     for j_planet, planet_pos in enumerate(frames_data[j_frame]):
+
+        global scroll
+        #Hacemos el zoom
+        ax.set_xlim(x_min*scroll, x_max*scroll)
+        ax.set_ylim(y_min*scroll, y_max*scroll)
+        scroll = min(scroll + 0.0001, max_scroll)
+
         x, y = planet_pos
         planet_points[j_planet].center = (x, y)
-
+        
         if show_trail:
             xs_old, ys_old = planet_trails[j_planet].get_data()
             xs_new = np.append(xs_old, x)
             ys_new = np.append(ys_old, y)
 
+            planet_labels[j_planet].set_x(x)
+            planet_labels[j_planet].set_y(y)
             planet_trails[j_planet].set_data(xs_new, ys_new)
 
     return planet_points + planet_trails
