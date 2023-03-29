@@ -1,9 +1,10 @@
-Sun	1.99e+30	0.0	0.0
-Mercury	3.30e+23	5.79e+7	47.4
-Venus	4.87e+24	1.08e+8	35.0
-Earth	5.97e+24	1.50e+8	29.8
-Mars	6.42e+23	2.28e+8	24.1
-Jupiter	1.90e+27	7.78e+8	13.1
-Saturn	5.68e+26	1.43e+9	9.7
-Uranus	8.68e+25	2.87e+9	6.8
-Neptune	1.02e+26	4.50e+9	5.4
+Nombre	Masa (kg)	Dist X (km),	Dist Y (km),	Vel.Orb (km/s)
+Sun	1.99e+30	0.0	0.0	0.0
+Mercury	3.30e+23	5.79e+7	0.0	47.4
+Venus	4.87e+24	1.08e+8	0.0	35.0
+Earth	5.97e+24	0.0	1.50e+8	29.8
+Mars	6.42e+23	2.28e+8	0.0	24.1
+Jupiter	1.90e+27	-7.78e+8	0.0	13.1
+Saturn	5.68e+26	1.43e+9	0.0	9.7
+Uranus	8.68e+26	2.87e+9	0.0	-6.8
+Neptune	1.02e+26	4.50e+9	700.0	5.4

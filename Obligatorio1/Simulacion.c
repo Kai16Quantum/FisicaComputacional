@@ -5,7 +5,7 @@
 
 int n_planetas = 9;
 double h_step = 0.1;
-double max_time = 40.0;
+double max_time = 806.0;
 const double d_sol_tierra = 1.469e11;
 const double masa_sol = 1.989e30;
 
@@ -15,11 +15,12 @@ void w_calcular(double[][2], double[][2], double[][2]);
 void r_calcular(double[][2], double[][2], double[][2], double[], double[]);
 void v_calcular(double[][2], double[][2], double[][2]);
 void v_calcular(double[][2], double[][2], double[][2]);
-void rescalar(double[], double[], double[]);
+void rescalar(double[], double[][2], double[]);
 double e_calcular(double[], double[][2], double[][2]);
 void copyarray(double[], double[], int);
 
 int main() {
+    //LECTURA DE ARCHIVOS
     FILE *f_inicial, *f_salida, *planetas_salida, *energia_salida, *periodos_salida;
     f_inicial= fopen("datos_iniciales.txt","r");
     f_salida = fopen("datos_salida.txt", "w");
@@ -27,16 +28,23 @@ int main() {
     energia_salida = fopen("energia_salida.dat", "w");
     periodos_salida = fopen("periodos_salida.dat", "w");
 
+    //INICIALIZACIÓN VARIABLES
     int i=0;
-    double masa, distancia, velocidad;
+    double masa, pos_x, pos_y, velocidad;
     char nombre[50];
     char* nombres[n_planetas];
-    double r_inicial[n_planetas];
+    double r_inicial[n_planetas][2];
     double v_inicial[n_planetas];
     double m_inicial[n_planetas];
     double angulo_inicial[n_planetas];
-    while (fscanf(f_inicial, "%49s\t%lf\t%lf\t%lf", nombre, &masa, &distancia, &velocidad)!=EOF) {
-        r_inicial[i] = distancia;
+
+    //Descartamos la primera linea
+    fscanf(f_inicial, "%*[^\n]\n");
+    
+    //Leemos el archivo
+    while (fscanf(f_inicial, "%49s\t%lf\t%lf\t%lf\t%lf", nombre, &masa, &pos_x, &pos_y, &velocidad)!=EOF) {
+        r_inicial[i][0] = pos_x;
+        r_inicial[i][1] = pos_y;
         v_inicial[i] = velocidad;
         m_inicial[i] = masa;
         nombres[i] = malloc(strlen(nombre) + 1);
@@ -45,6 +53,7 @@ int main() {
     }
 
 
+    // Reescalamos l
     rescalar(m_inicial, r_inicial, v_inicial);
     for (int i=0; i<n_planetas; i++){
         fprintf(f_salida, "%lg\t%lg\t%lg\n", m_inicial[i], r_inicial[i], v_inicial[i]);
@@ -63,14 +72,14 @@ int main() {
     double array_periodos[n_planetas];
     for (int i=0; i<n_planetas; i++) {
         //Centradas en Y=0.
-        matriz_posiciones[i][0] = r_inicial[i];
-        matriz_posiciones[i][1] = 0;
-        //Velocidad positiva en Y.
-        matriz_velocidades[i][0] = 0;
-        matriz_velocidades[i][1] = v_inicial[i];
+        matriz_posiciones[i][0] = r_inicial[i][0];
+        matriz_posiciones[i][1] = r_inicial[i][1];
         //Angulo inicial
         angulo_inicial[i] = atan2(matriz_posiciones[i][1], matriz_posiciones[i][0]);
         array_periodos[i] = -1;
+        //Velocidad positiva en Y.
+        matriz_velocidades[i][0] = sin(angulo_inicial[i])*v_inicial[i];
+        matriz_velocidades[i][1] = cos(angulo_inicial[i])*v_inicial[i];
     }
 
     //Calculamos la aceleración para las R y M actuales.
@@ -177,12 +186,13 @@ void v_calcular(double array_velocidades[][2], double array_aceleraciones[][2], 
     }
 }
 
-void rescalar(double masas_i[], double pos_i[], double vel_i[]){
+void rescalar(double masas_i[], double pos_i[][2], double vel_i[]){
     for (int i=0; i<n_planetas; i++) {
         // Dividimos entre la masa del sol Ms. (Kg -> Ms)
         masas_i[i] = masas_i[i] / (masa_sol);
         // Dividimos entre la distancia Sol-Tierra (km -> AU)
-        pos_i[i] = (pos_i[i] * 1000.0) / (d_sol_tierra);
+        pos_i[i][0] = (pos_i[i][0] * 1000.0) / (d_sol_tierra);
+        pos_i[i][1] = (pos_i[i][1] * 1000.0) / (d_sol_tierra);
         // Velocidad (km/s) -> (AU/t')
         double tiempo = pow((6.67430e-11 * masa_sol) / (pow(d_sol_tierra, 3)), 0.5);
         vel_i[i] = ((vel_i[i] / tiempo)*1000.0)/d_sol_tierra;
@@ -196,15 +206,24 @@ double e_calcular(double masas_i[], double matriz_posiciones[][2], double array_
     // V Gravitatorio = -GMm/r
     double energia = 0.0 ;
     for (int i=0; i<n_planetas; i++) {
-        //T
-        double velocidad_cuadrado = pow(array_velocidades[i][0],2) + pow(array_velocidades[i][1],2);
-        energia += 0.5*masas_i[i]*velocidad_cuadrado;
-        //V Gravitatorio, asumiendo que está reescalado
+        //T = 1/2 m v^2
+        //Pasamos de AU/t' -> m/s
+        double tiempo = pow((6.67430e-11 * masa_sol) / (pow(d_sol_tierra, 3)), 0.5);
+        double vel_x = (array_velocidades[i][0] * tiempo)*d_sol_tierra;
+        double vel_y = (array_velocidades[i][1] * tiempo)*d_sol_tierra;
+        double velocidad_cuadrado = pow(vel_x,2) + pow(vel_y,2);
+        //La masa a kg
+        energia += 0.5*(masas_i[i]*masa_sol)*velocidad_cuadrado;
+        //V Gravitatorio, asumiendo que está reescalado. V = -GMm/r
         for (int j=0; j<n_planetas; j++) {
             if (i!=j) {
                 double vector[] = {matriz_posiciones[i][0] - matriz_posiciones[j][0], matriz_posiciones[i][1] - matriz_posiciones[j][1]};
-                double r = pow(vector[0]*vector[0]+vector[1]*vector[1],0.5);
-                energia += -masas_i[i]*masas_i[j] / r;
+                //Pasamos de AU a metros
+                vector[0] = (vector[0] * d_sol_tierra);
+                vector[1] = (vector[1] * d_sol_tierra);
+                // r = sqrt(r_x^2 + r_y^2)
+                double r = pow(vector[0]*vector[0] + vector[1]*vector[1],0.5);
+                energia += (-1.0)*(masas_i[i]* masa_sol)*(masas_i[j]* masa_sol)*6.67430e-11 / r;
             }
         }
     }
