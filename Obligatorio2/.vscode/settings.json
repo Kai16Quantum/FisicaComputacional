@@ -1,0 +1,11 @@
+{
+    "files.associations": {
+        "gsl_rng.h": "c",
+        "gsl_types.h": "c",
+        "math.h": "c",
+        "gsl_inline.h": "c",
+        "gsl_errno.h": "c",
+        "time.h": "c"
+    },
+    "C_Cpp.errorSquiggles": "disabled"
+}
