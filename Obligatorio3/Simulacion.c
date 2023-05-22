@@ -7,7 +7,7 @@
 #include "complex.h"
 
 #define N 1000
-#define lambda 0.3
+#define lambda 1.0
 #define PI 3.1415927
 #define n_ciclos 5.0
 
@@ -49,7 +49,7 @@ int main(){
     }
 
     //Bucle principal
-    for (int t=0; t<200; t++) {
+    for (int t=1; t<500; t++) {
         obtener_valores(alpha_array, beta_array, phi_array, t);
         //Guardamos los valores
         for (int l=0;l<N;l++){
