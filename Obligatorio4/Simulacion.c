@@ -35,7 +35,7 @@ int main(){
     double v_nave = v_escape * 1.101;
     double theta = 0.0;
     valores_iniciales[0] = R_T/d_TL;
-    valores_iniciales[1] = -0.45;
+    valores_iniciales[1] = 0.45;
     valores_iniciales[2] = (v_nave/d_TL)*cos(theta-valores_iniciales[1]);
     valores_iniciales[3] = (valores_iniciales[0])*(v_nave/d_TL)*sin(theta-valores_iniciales[1]);
 
