@@ -42,10 +42,12 @@
 # Importa los módulos necesarios
 from matplotlib import pyplot as plt
 import numpy as np
+import os
 
+dir = os.path.dirname(__file__)
+file_in = os.path.join(dir, 'hamiltoniano.txt')
 # Parámetros
 # ========================================
-file_in = "hamiltoniano.txt" # Nombre del fichero de datos
 file_out = "hamilton" # Nombre del fichero de salida (sin extensión)
 
 # Límites de los ejes X e Y
@@ -56,3 +58,4 @@ plt.title('Line Graph using NUMPY')
 plt.xlabel('X')
 plt.ylabel('Y')
 plt.show()
+plt.savefig('hamiltoniano.png')
