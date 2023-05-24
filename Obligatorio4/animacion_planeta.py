@@ -44,19 +44,21 @@ from matplotlib import pyplot as plt
 from matplotlib.animation import FuncAnimation
 from matplotlib.patches import Circle
 import numpy as np
+import os
 
+dir = os.path.dirname(__file__)
+file_in = os.path.join(dir, 'coordenadas.txt')
 # Parámetros
-# ========================================
-file_in = "coordenadas.txt" # Nombre del fichero de datos
+# ========================================fichero de datos
 file_out = "planetas" # Nombre del fichero de salida (sin extensión)
 
 # Límites de los ejes X e Y
-x_min = -1.3
+x_min = -0.2
 x_max = 1.3
-y_min = -1.3
+y_min = -0.2
 y_max = 1.3
 
-interval = 20 # Tiempo entre fotogramas en milisegundos
+interval = 50 # Tiempo entre fotogramas en milisegundos
 show_trail = True # Muestra la "estela" del planeta
 trail_width = 1 # Ancho de la estela
 save_to_file = True # False: muestra la animación por pantalla,

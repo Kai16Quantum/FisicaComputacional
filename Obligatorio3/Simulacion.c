@@ -7,7 +7,7 @@
 #include "complex.h"
 
 #define N 1000
-#define lambda 1.0
+#define lambda 0.3
 #define PI 3.1415927
 #define n_ciclos 5.0
 
@@ -35,7 +35,7 @@ int main(){
     phi_array[N-1] = Complex(0.0,0.0);
     phi_array[0] = Complex(0.0,0.0);
 
-    for (int k=0; k<N-1; k++) {
+    for (int k=0; k<N; k++) {
         phi_array[k] = f_phi(k, 0, k_0_tilde, Complex(0.0,0.0), phi_array);
     }
 
@@ -44,7 +44,7 @@ int main(){
 
     //Normalicemos la función
     double norma = obtener_probabilidad(phi_array);
-    for (int k=0; k<N-1; k++) {
+    for (int k=0; k<N; k++) {
         phi_array[k] = RCmul(1.0/sqrt(norma),phi_array[k]);
     }
 
@@ -79,6 +79,7 @@ void obtener_valores(fcomplex alpha_array[], fcomplex beta_array[], fcomplex phi
         double V_j_tilde = f_V_j_tilde(j+1, k_0_tilde);
         fcomplex A_j_cero = f_A_j_cero(s_tilde, V_j_tilde);
         fcomplex denominador = Cadd(A_j_cero, alpha_array[j+1]);
+        //Gamma = 1/(Aj_0 + (Aj_+)*alpha_j)
         fcomplex gamma = Cdiv(Complex(1.0,0.0), denominador);
 
         alpha_array[j] = Cmul(gamma, Complex(-1.0,0.0));
@@ -132,7 +133,7 @@ fcomplex f_A_j_cero(double _s_tilde, double _V_j_tilde){
 
 double f_V_j_tilde(int _j, double _k_0_tilde) {
     double valor = 0.0;
-    if (_j > 2*N/5 && _j < 3*N/5) {
+    if (_j > 2.0*N/5.0 && _j < 3.0*N/5.0) {
         valor = lambda * _k_0_tilde*_k_0_tilde;
     }
 
