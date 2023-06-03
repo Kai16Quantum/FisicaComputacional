@@ -33,7 +33,7 @@ int main()
     int matriz_nodos[N_MAX][N_MAX];
     int array_patrones[N_MAX_PATRONES][N_MAX][N_MAX];
     f_salida = fopen(".\\Salida\\datos_salida.txt", "w");
-    f_patrones = fopen("patrones.txt", "r");
+    f_patrones = fopen(".patrones.txt", "r");
     f_solapamiento = fopen("\\Salida\\solapamiento.txt", "w");
 
     // Inicializamos la matriz de nodos
