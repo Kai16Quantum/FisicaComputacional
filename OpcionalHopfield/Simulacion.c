@@ -4,7 +4,6 @@
 #include <string.h>
 #include <math.h>
 #include <time.h>
-#include <windows.h>
 
 #define N_MAX 25
 #define N_MAX_PATRONES 25
@@ -29,7 +28,7 @@ int main()
     FILE *f_salida, *f_patrones, *f_solapamiento;
     // Parámetros iniciales
     double temp = 10e-4;
-    int step_number = 1;
+    int step_number = 25;
     int matriz_nodos[N_MAX][N_MAX];
     int array_patrones[N_MAX_PATRONES][N_MAX][N_MAX];
     f_salida = fopen(".\\Salida\\datos_salida.txt", "w");
@@ -98,7 +97,7 @@ int main()
             strcpy(filename, ".\\Salida\\datos_salida_3_a_T");
             //Guardamos el k actual en un string
             sprintf(number, "%f", temp_nueva);
-            sprintf(mu_extension, "%f", mu);
+            sprintf(mu_extension, "%d", mu);
             //Lo juntamos todo
             strcat(filename, number);
             strcat(filename, "PATRON_");
@@ -127,7 +126,6 @@ int main()
             strcpy(filename, ".\\Salida\\datos_salida_3_b_T");
             //Guardamos el k y mu actual en un string
             sprintf(number, "%f", temp_nueva);
-            sprintf(mu_extension, "%f", mu);
             //Lo juntamos todo
             strcat(filename, number);
             strcat(filename, "_PATRON_");
@@ -188,7 +186,7 @@ void algoritmo_hopfield(int step_number, double temp, int matriz_nodos[][N_MAX],
             int n = (rand() % N_MAX);
             int m = (rand() % N_MAX);
 
-            double p = min(1, exp(-incremento_energia(matriz_nodos,array_patrones,n,m,n_patrones)/temp));
+            double p = fmin(1, exp(-incremento_energia(matriz_nodos,array_patrones,n,m,n_patrones)/temp));
 
             //Generamos un número aleatorio entre 0 y 1.
             double chi = (rand() % 10001) / 10000.0;
