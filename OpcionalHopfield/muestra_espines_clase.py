@@ -42,10 +42,13 @@ from matplotlib import pyplot as plt
 from matplotlib.animation import FuncAnimation
 import numpy as np
 import io
+import os
 
+absolute_path = os.path.dirname(__file__)
+relative_path = "datos_salida_1b.txt"
+file_in = os.path.join(absolute_path, "Salida", relative_path)
 # Parámetros
 # ========================================
-file_in = "datos_salida.txt" # Nombre del fichero de datos
 file_out = "hopfield" # Nombre del fichero de salida (sin extensión)
 interval = 100 # Tiempo entre fotogramas en milisegundos
 save_to_file = True # False: muestra la animación por pantalla,
