@@ -6,7 +6,7 @@
 #include <time.h>
 #include <windows.h>
 
-#define N_MAX 25
+#define N_MAX 50
 #define N_MAX_PATRONES 25
 
 void leer_patrones(int, int[][N_MAX][N_MAX], FILE*);
