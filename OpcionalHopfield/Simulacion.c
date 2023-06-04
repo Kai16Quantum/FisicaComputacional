@@ -5,7 +5,7 @@
 #include <math.h>
 #include <time.h>
 
-#define N_MAX 25
+#define N_MAX 50
 #define N_MAX_PATRONES 25
 
 void leer_patrones(int, int[][N_MAX][N_MAX], FILE*);
@@ -32,7 +32,7 @@ int main()
     int matriz_nodos[N_MAX][N_MAX];
     int array_patrones[N_MAX_PATRONES][N_MAX][N_MAX];
     f_salida = fopen(".\\Salida\\datos_salida.txt", "w");
-    f_patrones = fopen("patrones.txt", "r");
+    f_patrones = fopen(".patrones.txt", "r");
     f_solapamiento = fopen("\\Salida\\solapamiento.txt", "w");
 
     // Inicializamos la matriz de nodos
