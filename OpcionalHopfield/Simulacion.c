@@ -28,7 +28,7 @@ int main()
     FILE *f_salida, *f_patrones, *f_solapamiento;
     // Parámetros iniciales
     double temp = 10e-4;
-    int step_number = 25;
+    int step_number = 1;
     int matriz_nodos[N_MAX][N_MAX];
     int array_patrones[N_MAX_PATRONES][N_MAX][N_MAX];
     f_salida = fopen("/Salida/datos_salida.txt", "w");
@@ -97,7 +97,6 @@ int main()
             strcpy(filename, "/Salida/datos_salida_3_a_T");
             //Guardamos el k actual en un string
             sprintf(number, "%f", temp_nueva);
-            sprintf(mu_extension, "%d", mu);
             //Lo juntamos todo
             strcat(filename, number);
             strcat(filename, "PATRON_");
@@ -126,6 +125,7 @@ int main()
             strcpy(filename, "/Salida/datos_salida_3_b_T");
             //Guardamos el k y mu actual en un string
             sprintf(number, "%f", temp_nueva);
+            sprintf(mu_extension, "%d", mu);
             //Lo juntamos todo
             strcat(filename, number);
             strcat(filename, "_PATRON_");
