@@ -32,9 +32,9 @@ int main()
     int step_number = 1;
     int matriz_nodos[N_MAX][N_MAX];
     int array_patrones[N_MAX_PATRONES][N_MAX][N_MAX];
-    f_salida = fopen(".\\Salida\\datos_salida.txt", "w");
-    f_patrones = fopen(".patrones.txt", "r");
-    f_solapamiento = fopen("\\Salida\\solapamiento.txt", "w");
+    f_salida = fopen("/Salida/datos_salida.txt", "w");
+    f_patrones = fopen("patrones.txt", "r");
+    f_solapamiento = fopen("/Salida/solapamiento.txt", "w");
 
     // Inicializamos la matriz de nodos
     inicializar_nodos(matriz_nodos, 0);
@@ -50,8 +50,8 @@ int main()
     
     
     // ----------------[] Partiendo de b) El patrón deformado.     []---------------------
-    f_salida = fopen(".\\Salida\\datos_salida_1b.txt", "w");
-    f_solapamiento = fopen(".\\Salida\\solapamiento_1b.txt", "w");
+    f_salida = fopen("/Salida/datos_salida_1b.txt", "w");
+    f_solapamiento = fopen("/Salida/solapamiento_1b.txt", "w");
     copiar_matriz(array_patrones[0], matriz_nodos);
     alterar_nodos(matriz_nodos,0.5);
     algoritmo_hopfield(step_number, temp, matriz_nodos, array_patrones, f_salida, f_solapamiento, 1);
@@ -64,7 +64,7 @@ int main()
         double temp_nueva = temp * pow(2.0,k);
         //Creamos el nombre de la extensión y del archivo
         strcpy(extension, ".txt");
-        strcpy(filename, ".\\Salida\\datos_salida_2_T");
+        strcpy(filename, "/Salida/datos_salida_2_T");
         //Guardamos el k actual en un string
         sprintf(number, "%f", temp_nueva);
         //Lo juntamos todo
@@ -73,7 +73,7 @@ int main()
         f_salida = fopen(filename, "w");
 
         //Creamos el nombre del archivo
-        strcpy(filename, ".\\Salida\\solapamiento_2_T");
+        strcpy(filename, "/Salida/solapamiento_2_T");
         //Lo juntamos todo
         strcat(filename, number);
         strcat(filename, extension);
@@ -95,7 +95,7 @@ int main()
             double temp_nueva = temp * pow(2.0,k);
             //Creamos el nombre de la extensión y del archivo
             strcpy(extension, ".txt");
-            strcpy(filename, ".\\Salida\\datos_salida_3_a_T");
+            strcpy(filename, "/Salida/datos_salida_3_a_T");
             //Guardamos el k actual en un string
             sprintf(number, "%f", temp_nueva);
             sprintf(mu_extension, "%f", mu);
@@ -107,7 +107,7 @@ int main()
             f_salida = fopen(filename, "w");
 
             //Creamos el nombre del archivo
-            strcpy(filename, ".\\Salida\\solapamiento_3_a_T");
+            strcpy(filename, "/Salida/solapamiento_3_a_T");
             //Lo juntamos todo
             strcat(filename, number);
             strcat(filename, "_PATRON_");
@@ -124,7 +124,7 @@ int main()
             double temp_nueva = temp * pow(2.0,k);
             //Creamos el nombre de la extensión y del archivo
             strcpy(extension, ".txt");
-            strcpy(filename, ".\\Salida\\datos_salida_3_b_T");
+            strcpy(filename, "/Salida/datos_salida_3_b_T");
             //Guardamos el k y mu actual en un string
             sprintf(number, "%f", temp_nueva);
             sprintf(mu_extension, "%f", mu);
@@ -136,7 +136,7 @@ int main()
             f_salida = fopen(filename, "w");
 
             //Creamos el nombre del archivo
-            strcpy(filename, ".\\Salida\\solapamiento_3_b_T");
+            strcpy(filename, "/Salida/solapamiento_3_b_T");
             //Lo juntamos todo
             strcat(filename, number);
             strcat(filename, "_PATRON_");
