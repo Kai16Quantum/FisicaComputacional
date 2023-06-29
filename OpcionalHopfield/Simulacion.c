@@ -5,9 +5,9 @@
 #include <math.h>
 #include <time.h>
 
-#define N_MAX 20
 #define N_MAX_PATRONES 14
 #define APARTADO 4
+int N_MAX = 40;
 
 void leer_patrones(int, int[][N_MAX][N_MAX], FILE*);
 void copiar_matriz(int[][N_MAX], int[][N_MAX]);
@@ -156,47 +156,54 @@ int main()
         //break;
     //case 4:
     temp = 10e-4;
-    //Generamos los patrones aleatorios
-    int array_patrones_aleatorios[N_MAX_PATRONES][N_MAX][N_MAX];
+    N_MAX = 20;
 
-    for (int p_n = 0; p_n < N_MAX_PATRONES; p_n++) {
-        for (int i=0; i<N_MAX; i++) {
-            for (int j=0; j<N_MAX; j++) {
-                int valor = rand()%2 ;
-                array_patrones_aleatorios[p_n][i][j] = valor;
+    for (int _n_experiencias = 0; _n_experiencias<10; _n_experiencias++){
+        //Generamos los patrones aleatorios
+        int array_patrones_aleatorios[N_MAX_PATRONES][N_MAX][N_MAX];
+
+        for (int p_n = 0; p_n < N_MAX_PATRONES; p_n++) {
+            for (int i=0; i<N_MAX; i++) {
+                for (int j=0; j<N_MAX; j++) {
+                    int valor = rand()%2 ;
+                    array_patrones_aleatorios[p_n][i][j] = valor;
+                }
             }
         }
-    }
 
-    for (int n_patrones_activados=1; n_patrones_activados<N_MAX_PATRONES; n_patrones_activados++) {
-        leer_patrones(n_patrones_activados, array_patrones, f_patrones);
-        // ----------------[] Partiendo de a) Una condición aleatoria. []---------------------
-        for (int mu=0; mu<n_patrones_activados; mu++){
-            char mu_extension[10];
-            sprintf(mu_extension, "%d", mu);
-            char extension[12], number[24], filename[64];
-            //Creamos el nombre de la extensión y del archivo
-            strcpy(extension, ".txt");
-            strcpy(filename, "Salida/datos_salida_4_");
-            //Guardamos el nº de patrones actual en un string
-            sprintf(number, "%d", n_patrones_activados);
-            //Lo juntamos todo
-            strcat(filename, number);
-            strcat(filename, "PATRON_");
-            strcat(filename, mu_extension);
-            strcat(filename, extension);
-            f_salida = fopen(filename, "w");
+        for (int n_patrones_activados=1; n_patrones_activados<N_MAX_PATRONES; n_patrones_activados++) {
+            leer_patrones(n_patrones_activados, array_patrones, f_patrones);
+            // ----------------[] Partiendo de a) Una condición aleatoria. []---------------------
+            for (int mu=0; mu<n_patrones_activados; mu++){
+                char mu_extension[10];
+                sprintf(mu_extension, "%d", mu);
+                char extension[12], number[24],  experiencia[24], filename[64];
+                sprintf(experiencia, "%d", _n_experiencias);
+                //Creamos el nombre de la extensión y del archivo
+                strcpy(extension, ".txt");
+                strcpy(filename, "Salida/datos_salida_4_");
+                //Guardamos el nº de patrones actual en un string
+                sprintf(number, "%d", n_patrones_activados);
+                //Lo juntamos todo
+                strcat(filename, number);
+                strcat(filename, "_PATRON_");
+                strcat(filename, mu_extension);
+                strcat(filename, "_EXPERIENCIA_");
+                strcat(filename, experiencia);
+                strcat(filename, extension);
+                f_salida = fopen(filename, "w");
 
-            //Creamos el nombre del archivo
-            strcpy(filename, "Salida/solapamiento_4_");
-            //Lo juntamos todo
-            strcat(filename, number);
-            strcat(filename, "_PATRON_");
-            strcat(filename, mu_extension);
-            strcat(filename, extension);
-            f_solapamiento = fopen(filename, "w");
-            inicializar_nodos(matriz_nodos, -1);
-            algoritmo_hopfield(step_number, temp, matriz_nodos, array_patrones, f_salida, f_solapamiento, 1);
+                //Creamos el nombre del archivo
+                strcpy(filename, "Salida/solapamiento_4_");
+                //Lo juntamos todo
+                strcat(filename, number);
+                strcat(filename, "_PATRON_");
+                strcat(filename, mu_extension);
+                strcat(filename, extension);
+                f_solapamiento = fopen(filename, "w");
+                inicializar_nodos(matriz_nodos, -1);
+                algoritmo_hopfield(step_number, temp, matriz_nodos, array_patrones, f_salida, f_solapamiento, 1);
+            }
         }
     }
         //break;
