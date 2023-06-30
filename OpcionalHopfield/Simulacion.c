@@ -7,7 +7,7 @@
 
 #define N_MAX_PATRONES 14
 #define APARTADO 4
-int N_MAX = 50;
+int N_MAX = 30;
 
 void leer_patrones(int, int[][N_MAX][N_MAX], FILE*);
 void copiar_matriz(int[][N_MAX], int[][N_MAX]);
