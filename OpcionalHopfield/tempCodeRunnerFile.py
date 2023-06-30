@@ -1,1 +1,1 @@
-    ax.legend(frameon=False)
+ax.legend()

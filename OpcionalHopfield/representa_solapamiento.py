@@ -15,6 +15,7 @@ def leer_archivo(nombre_archivo):
         return y, temperatura
 
 def graficar_solapamiento(carpeta):
+    carpeta = os.path.join(os.path.dirname(__file__),carpeta)
     fig, ax = plt.subplots()
     archivos = os.listdir(carpeta)
     separacion_texto = 0.08
@@ -49,7 +50,7 @@ def graficar_solapamiento(carpeta):
     # Remove the right border
     ax.spines['right'].set_visible(False)
 
-    plt.savefig("Solapamiento_Para_cada_T.png")
+    plt.savefig(os.path.join(os.path.dirname(__file__),"Salida/Solapamiento_Para_cada_T.png"))
     plt.show()
 
 carpeta_salida = 'Solapamientos'

@@ -6,7 +6,7 @@
 #include <time.h>
 
 #define N_MAX_PATRONES 14
-#define APARTADO 4
+#define APARTADO 3
 int N_MAX = 30;
 
 void leer_patrones(int, int[][N_MAX][N_MAX], FILE*);
@@ -43,172 +43,182 @@ int main()
     leer_patrones(1, array_patrones, f_patrones);
     
 
-    //switch (APARTADO) {
-    // EJERCICIO 1: Ver como la red es capaz de recordar un solo patrón almacenado, para T = 10^-4.
-    // ----------------[] Partiendo de a) Una condición aleatoria. []---------------------
-    //case 1:
-    inicializar_nodos(matriz_nodos, -1);
-    algoritmo_hopfield(step_number, temp, matriz_nodos, array_patrones, f_salida, f_solapamiento, 1);
-    
-    
-    // ----------------[] Partiendo de b) El patrón deformado.     []---------------------
-    f_salida = fopen("Salida/datos_salida_1b.txt", "w");
-    f_solapamiento = fopen("Salida/solapamiento_1b.txt", "w");
-    copiar_matriz(array_patrones[0], matriz_nodos);
-    alterar_nodos(matriz_nodos,0.5);
-    algoritmo_hopfield(step_number, temp, matriz_nodos, array_patrones, f_salida, f_solapamiento, 1);
-        //break;
-    // EJERCICIO 2: Hacer lo anterior pero para diferentes temperaturas, de manera que se pueda obtener la curva de 
-    // solapamiento frente a temperatura.
-    //case 2:
-    for (int k=0; k<10; k++) {
-        char extension[12], number[24], filename[64];
-        double temp_nueva = temp * pow(2.0,k);
-        //Creamos el nombre de la extensión y del archivo
-        strcpy(extension, ".txt");
-        strcpy(filename, "Salida/datos_salida_2_T");
-        //Guardamos el k actual en un string
-        sprintf(number, "%f", temp_nueva);
-        //Lo juntamos todo
-        strcat(filename, number);
-        strcat(filename, extension);
-        f_salida = fopen(filename, "w");
-
-        //Creamos el nombre del archivo
-        strcpy(filename, "Salida/solapamiento_2_T");
-        //Lo juntamos todo
-        strcat(filename, number);
-        strcat(filename, extension);
-        f_solapamiento = fopen(filename, "w");
+    switch (APARTADO) {
+        // EJERCICIO 1: Ver como la red es capaz de recordar un solo patrón almacenado, para T = 10^-4.
+        // ----------------[] Partiendo de a) Una condición aleatoria. []---------------------
+        case 1:
         inicializar_nodos(matriz_nodos, -1);
-        algoritmo_hopfield(step_number, temp_nueva, matriz_nodos, array_patrones, f_salida, f_solapamiento, 1);
-    }
-        //break;
-
-    // EJERCICIO 3: Hacer lo mismo que en el punto 1 y 2 pero para varios patrones.
-    int n_patrones = 4;
-    //case 3:
-    f_patrones = fopen("letras.txt", "r");
-    leer_patrones(n_patrones, array_patrones, f_patrones);
-    // ----------------[] Partiendo de a) Una condición aleatoria. []---------------------
-    for (int mu=0; mu<n_patrones; mu++){
-        char mu_extension[10];
-        sprintf(mu_extension, "%d", mu);
-        for (int k=0; k<10; k++) {
-            char extension[12], number[24], filename[64];
-            double temp_nueva = temp * pow(2.0,k);
-            //Creamos el nombre de la extensión y del archivo
-            strcpy(extension, ".txt");
-            strcpy(filename, "Salida/datos_salida_3_a_T");
-            //Guardamos el k actual en un string
-            sprintf(number, "%f", temp_nueva);
-            //Lo juntamos todo
-            strcat(filename, number);
-            strcat(filename, "PATRON_");
-            strcat(filename, mu_extension);
-            strcat(filename, extension);
-            f_salida = fopen(filename, "w");
-
-            //Creamos el nombre del archivo
-            strcpy(filename, "Salida/solapamiento_3_a_T");
-            //Lo juntamos todo
-            strcat(filename, number);
-            strcat(filename, "_PATRON_");
-            strcat(filename, mu_extension);
-            strcat(filename, extension);
-            f_solapamiento = fopen(filename, "w");
-            inicializar_nodos(matriz_nodos, -1);
-            algoritmo_hopfield(step_number, temp_nueva, matriz_nodos, array_patrones, f_salida, f_solapamiento, 1);
-        }
-    
-// ----------------[] Partiendo de b) El patrón deformado.     []---------------------
-        for (int k=0; k<10; k++) {
-            char extension[12], number[24], filename[64];
-            double temp_nueva = temp * pow(2.0,k);
-            //Creamos el nombre de la extensión y del archivo
-            strcpy(extension, ".txt");
-            strcpy(filename, "Salida/datos_salida_3_b_T");
-            //Guardamos el k y mu actual en un string
-            sprintf(number, "%f", temp_nueva);
-            sprintf(mu_extension, "%d", mu);
-            //Lo juntamos todo
-            strcat(filename, number);
-            strcat(filename, "_PATRON_");
-            strcat(filename, mu_extension);
-            strcat(filename, extension);
-            f_salida = fopen(filename, "w");
-
-            //Creamos el nombre del archivo
-            strcpy(filename, "Salida/solapamiento_3_b_T");
-            //Lo juntamos todo
-            strcat(filename, number);
-            strcat(filename, "_PATRON_");
-            strcat(filename, mu_extension);
-            strcat(filename, extension);
-            f_solapamiento = fopen(filename, "w");
-
-            //Copiamos y alteramos
-            copiar_matriz(array_patrones[mu], matriz_nodos);
-            alterar_nodos(matriz_nodos,0.5);
-            algoritmo_hopfield(step_number, temp_nueva, matriz_nodos, array_patrones, f_salida, f_solapamiento, 1);
-        }
-    }
-        //break;
-    //case 4:
-    temp = 10e-4;
-    N_MAX = 20;
-
-    for (int _n_experiencias = 0; _n_experiencias<10; _n_experiencias++){
-        //Generamos los patrones aleatorios
-        int array_patrones_aleatorios[N_MAX_PATRONES][N_MAX][N_MAX];
-
-        for (int p_n = 0; p_n < N_MAX_PATRONES; p_n++) {
-            for (int i=0; i<N_MAX; i++) {
-                for (int j=0; j<N_MAX; j++) {
-                    int valor = rand()%2 ;
-                    array_patrones_aleatorios[p_n][i][j] = valor;
-                }
-            }
-        }
-
-        for (int n_patrones_activados=1; n_patrones_activados<N_MAX_PATRONES; n_patrones_activados++) {
-            leer_patrones(n_patrones_activados, array_patrones, f_patrones);
-            // ----------------[] Partiendo de a) Una condición aleatoria. []---------------------
-            for (int mu=0; mu<n_patrones_activados; mu++){
-                char mu_extension[10];
-                sprintf(mu_extension, "%d", mu);
-                char extension[12], number[24],  experiencia[24], filename[64];
-                sprintf(experiencia, "%d", _n_experiencias);
+        algoritmo_hopfield(step_number, temp, matriz_nodos, array_patrones, f_salida, f_solapamiento, 1);
+        
+        
+        // ----------------[] Partiendo de b) El patrón deformado.     []---------------------
+        f_salida = fopen("Salida/datos_salida_1b.txt", "w");
+        f_solapamiento = fopen("Salida/solapamiento_1b.txt", "w");
+        copiar_matriz(array_patrones[0], matriz_nodos);
+        alterar_nodos(matriz_nodos,0.5);
+        algoritmo_hopfield(step_number, temp, matriz_nodos, array_patrones, f_salida, f_solapamiento, 1);
+            //break;
+        // EJERCICIO 2: Hacer lo anterior pero para diferentes temperaturas, de manera que se pueda obtener la curva de 
+        // solapamiento frente a temperatura.
+        case 2:
+            for (int k=0; k<10; k++) {
+                char extension[12], number[24], filename[64];
+                double temp_nueva = temp * pow(2.0,k);
                 //Creamos el nombre de la extensión y del archivo
                 strcpy(extension, ".txt");
-                strcpy(filename, "Salida/datos_salida_4_");
-                //Guardamos el nº de patrones actual en un string
-                sprintf(number, "%d", n_patrones_activados);
+                strcpy(filename, "Salida/datos_salida_2_T");
+                //Guardamos el k actual en un string
+                sprintf(number, "%f", temp_nueva);
                 //Lo juntamos todo
                 strcat(filename, number);
-                strcat(filename, "_PATRON_");
-                strcat(filename, mu_extension);
-                strcat(filename, "_EXPERIENCIA_");
-                strcat(filename, experiencia);
                 strcat(filename, extension);
                 f_salida = fopen(filename, "w");
 
                 //Creamos el nombre del archivo
-                strcpy(filename, "Salida/solapamiento_4_");
+                strcpy(filename, "Salida/solapamiento_2_T");
                 //Lo juntamos todo
                 strcat(filename, number);
-                strcat(filename, "_PATRON_");
-                strcat(filename, mu_extension);
                 strcat(filename, extension);
                 f_solapamiento = fopen(filename, "w");
                 inicializar_nodos(matriz_nodos, -1);
-                algoritmo_hopfield(step_number, temp, matriz_nodos, array_patrones, f_salida, f_solapamiento, 1);
+                algoritmo_hopfield(step_number, temp_nueva, matriz_nodos, array_patrones, f_salida, f_solapamiento, 1);
             }
-        }
+            break;
+
+        // EJERCICIO 3: Hacer lo mismo que en el punto 1 y 2 pero para varios patrones.
+        int n_patrones = 4;
+        case 3:
+            f_patrones = fopen("letras.txt", "r");
+            leer_patrones(n_patrones, array_patrones, f_patrones);
+            // ----------------[] Partiendo de a) Una condición aleatoria. []---------------------
+            for (int _n_experiencias = 0; _n_experiencias<4; _n_experiencias++){
+                char experiencia[10];
+                sprintf(experiencia, "%d", _n_experiencias);
+                for (int mu=0; mu<n_patrones; mu++){
+                    char mu_extension[10];
+                    sprintf(mu_extension, "%d", mu);
+                    for (int k=0; k<10; k++) {
+                        char extension[12], number[24], filename[64];
+                        double temp_nueva = temp * pow(2.0,k);
+                        //Creamos el nombre de la extensión y del archivo
+                        strcpy(extension, ".txt");
+                        strcpy(filename, "Salida/datos_salida_3_a_T");
+                        //Guardamos el k actual en un string
+                        sprintf(number, "%f", temp_nueva);
+                        //Lo juntamos todo
+                        strcat(filename, number);
+                        strcat(filename, "PATRON_");
+                        strcat(filename, mu_extension);
+                        strcat(filename, extension);
+                        f_salida = fopen(filename, "w");
+
+                        //Creamos el nombre del archivo
+                        strcpy(filename, "Salida/solapamiento_3_a_T");
+                        //Lo juntamos todo
+                        strcat(filename, number);
+                        strcat(filename, "_PATRON_");
+                        strcat(filename, mu_extension);
+                        strcat(filename, "_EXPERIENCIA_");
+                        strcat(filename, experiencia);
+                        strcat(filename, extension);
+                        f_solapamiento = fopen(filename, "w");
+                        inicializar_nodos(matriz_nodos, -1);
+                        algoritmo_hopfield(step_number, temp_nueva, matriz_nodos, array_patrones, f_salida, f_solapamiento, 1);
+                    }
+                
+            // ----------------[] Partiendo de b) El patrón deformado.     []---------------------
+                    for (int k=0; k<10; k++) {
+                        char extension[12], number[24], filename[64];
+                        double temp_nueva = temp * pow(2.0,k);
+                        //Creamos el nombre de la extensión y del archivo
+                        strcpy(extension, ".txt");
+                        strcpy(filename, "Salida/datos_salida_3_b_T");
+                        //Guardamos el k y mu actual en un string
+                        sprintf(number, "%f", temp_nueva);
+                        sprintf(mu_extension, "%d", mu);
+                        //Lo juntamos todo
+                        strcat(filename, number);
+                        strcat(filename, "_PATRON_");
+                        strcat(filename, mu_extension);
+                        strcat(filename, extension);
+                        f_salida = fopen(filename, "w");
+
+                        //Creamos el nombre del archivo
+                        strcpy(filename, "Salida/solapamiento_3_b_T");
+                        //Lo juntamos todo
+                        strcat(filename, number);
+                        strcat(filename, "_PATRON_");
+                        strcat(filename, mu_extension);
+                        strcat(filename, "_EXPERIENCIA_");
+                        strcat(filename, experiencia);
+                        strcat(filename, extension);
+                        f_solapamiento = fopen(filename, "w");
+
+                        //Copiamos y alteramos
+                        copiar_matriz(array_patrones[mu], matriz_nodos);
+                        alterar_nodos(matriz_nodos,0.5);
+                        algoritmo_hopfield(step_number, temp_nueva, matriz_nodos, array_patrones, f_salida, f_solapamiento, 1);
+                    }
+                }
+            }
+            break;
+        case 4:
+            temp = 10e-4;
+            N_MAX = 20;
+
+            for (int _n_experiencias = 0; _n_experiencias<10; _n_experiencias++){
+                //Generamos los patrones aleatorios
+                int array_patrones_aleatorios[N_MAX_PATRONES][N_MAX][N_MAX];
+
+                for (int p_n = 0; p_n < N_MAX_PATRONES; p_n++) {
+                    for (int i=0; i<N_MAX; i++) {
+                        for (int j=0; j<N_MAX; j++) {
+                            int valor = rand()%2 ;
+                            array_patrones_aleatorios[p_n][i][j] = valor;
+                        }
+                    }
+                }
+
+                for (int n_patrones_activados=1; n_patrones_activados<N_MAX_PATRONES; n_patrones_activados++) {
+                    leer_patrones(n_patrones_activados, array_patrones, f_patrones);
+                    // ----------------[] Partiendo de a) Una condición aleatoria. []---------------------
+                    for (int mu=0; mu<n_patrones_activados; mu++){
+                        char mu_extension[10];
+                        sprintf(mu_extension, "%d", mu);
+                        char extension[12], number[24],  experiencia[24], filename[64];
+                        sprintf(experiencia, "%d", _n_experiencias);
+                        //Creamos el nombre de la extensión y del archivo
+                        strcpy(extension, ".txt");
+                        strcpy(filename, "Salida/datos_salida_4_");
+                        //Guardamos el nº de patrones actual en un string
+                        sprintf(number, "%d", n_patrones_activados);
+                        //Lo juntamos todo
+                        strcat(filename, number);
+                        strcat(filename, "_PATRON_");
+                        strcat(filename, mu_extension);
+                        strcat(filename, "_EXPERIENCIA_");
+                        strcat(filename, experiencia);
+                        strcat(filename, extension);
+                        f_salida = fopen(filename, "w");
+
+                        //Creamos el nombre del archivo
+                        strcpy(filename, "Salida/solapamiento_4_");
+                        //Lo juntamos todo
+                        strcat(filename, number);
+                        strcat(filename, "_PATRON_");
+                        strcat(filename, mu_extension);
+                        strcat(filename, "_EXPERIENCIA_");
+                        strcat(filename, experiencia);
+                        strcat(filename, extension);
+                        f_solapamiento = fopen(filename, "w");
+                        inicializar_nodos(matriz_nodos, -1);
+                        algoritmo_hopfield(step_number, temp, matriz_nodos, array_patrones, f_salida, f_solapamiento, 1);
+                    }
+                }
+            }
+            break;
+        //End switch
     }
-        //break;
-    //End switch
-    //}
     
     return 1;
 }

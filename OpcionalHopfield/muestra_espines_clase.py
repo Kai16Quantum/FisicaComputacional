@@ -84,7 +84,10 @@ for frame_data_str in data_str.split("\n\n"):
 fig, ax = plt.subplots()
 
 # Define el rango de los ejes
-ax.axis("off")  # No muestra los ejes
+ax.set_xlim(-1,30)  
+ax.set_ylim(-1,30)
+ax.invert_yaxis()
+ax.invert_xaxis()
 
 # Representa el primer fotograma
 im = ax.imshow(frames_data[0], cmap="binary", vmin=0, vmax=+1)
