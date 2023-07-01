@@ -116,8 +116,9 @@ for frame_data_str in data_array_str[file_n].split("\n\n"):
             if pendulo_pos.size > 0:
                 frame_data.append(np.fromstring(pendulo_pos_str, sep=","))
     # Añade los datos de este fotograma a la lista
-    if frame_number % 30 == 0:
+    if frame_number % 10 == 0:
         frames_data.append(frame_data)
+        frame_number+=1
     else:
         frame_number+=1
 
