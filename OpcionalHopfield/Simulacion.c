@@ -6,7 +6,7 @@
 #include <time.h>
 
 #define N_MAX_PATRONES 14
-#define APARTADO 3
+#define APARTADO 4
 int N_MAX = 30;
 
 void leer_patrones(int, int[][N_MAX][N_MAX], FILE*);
@@ -120,7 +120,7 @@ int main()
                     strcat(filename, extension);
                     f_solapamiento = fopen(filename, "w");
                     inicializar_nodos(matriz_nodos, -1);
-                    algoritmo_hopfield(step_number, temp_nueva, matriz_nodos, array_patrones, f_salida, f_solapamiento, 1);
+                    algoritmo_hopfield(step_number, temp_nueva, matriz_nodos, array_patrones, f_salida, f_solapamiento, n_patrones);
                 }    
         // ----------------[] Partiendo de b) El patrón deformado.     []---------------------
                 for (int k=0; k<10; k++) {
@@ -153,7 +153,7 @@ int main()
                     //Copiamos y alteramos
                     copiar_matriz(array_patrones[mu], matriz_nodos);
                     alterar_nodos(matriz_nodos,0.5);
-                    algoritmo_hopfield(step_number, temp_nueva, matriz_nodos, array_patrones, f_salida, f_solapamiento, 1);
+                    algoritmo_hopfield(step_number, temp_nueva, matriz_nodos, array_patrones, f_salida, f_solapamiento, n_patrones);
                 }
             }
         }
@@ -208,7 +208,7 @@ int main()
                     strcat(filename, extension);
                     f_solapamiento = fopen(filename, "w");
                     inicializar_nodos(matriz_nodos, -1);
-                    algoritmo_hopfield(step_number, temp, matriz_nodos, array_patrones, f_salida, f_solapamiento, 1);
+                    algoritmo_hopfield(step_number, temp, matriz_nodos, array_patrones, f_salida, f_solapamiento, n_patrones_activados);
                 }
             }
         }
