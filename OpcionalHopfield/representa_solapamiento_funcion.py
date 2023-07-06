@@ -34,6 +34,7 @@ def graficar_solapamiento(carpeta):
     plt.ylabel('Solapamiento Final (Promedio últimos 4 valores)')
     plt.title('Solapamiento Final frente a la Temperatura')
     plt.grid(True)
+    plt.xscale('log')
     plt.savefig("Solapamientos_Frente_a_T.png")
     plt.show()
     
