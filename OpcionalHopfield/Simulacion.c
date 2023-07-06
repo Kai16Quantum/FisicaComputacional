@@ -11,7 +11,7 @@
 
     void leer_patrones(int, int[][N_MAX][N_MAX], FILE*);
     void copiar_matriz(int[][N_MAX], int[][N_MAX]);
-    void algoritmo_hopfield(int, double, int[][N_MAX], int[][N_MAX][N_MAX], FILE*, FILE*, int, int);
+    void algoritmo_hopfield(int, double, int[][N_MAX], int[][N_MAX][N_MAX], FILE*, FILE*, int);
     double incremento_energia(int[][N_MAX], int[][N_MAX][N_MAX], int, int, int);
     void inicializar_nodos(int[][N_MAX], int);
     int s(int[][N_MAX], int, int);
@@ -48,7 +48,7 @@
         // ----------------[] Partiendo de a) Una condición aleatoria. []---------------------
         if (APARTADO == 1){
             inicializar_nodos(matriz_nodos, -1);
-            algoritmo_hopfield(step_number, temp, matriz_nodos, array_patrones, f_salida, f_solapamiento, 1, 0);
+            algoritmo_hopfield(step_number, temp, matriz_nodos, array_patrones, f_salida, f_solapamiento, 1);
             
             
             // ----------------[] Partiendo de b) El patrón deformado.     []---------------------
@@ -56,7 +56,7 @@
             f_solapamiento = fopen("Salida/solapamiento_1b.txt", "w");
             copiar_matriz(array_patrones[0], matriz_nodos);
             alterar_nodos(matriz_nodos,0.5);
-            algoritmo_hopfield(step_number, temp, matriz_nodos, array_patrones, f_salida, f_solapamiento, 1, 0);
+            algoritmo_hopfield(step_number, temp, matriz_nodos, array_patrones, f_salida, f_solapamiento, 1);
         } else if (APARTADO == 2) {
             // EJERCICIO 2: Hacer lo anterior pero para diferentes temperaturas, de manera que se pueda obtener la curva de 
             // solapamiento frente a temperatura.
@@ -80,7 +80,7 @@
                 strcat(filename, extension);
                 f_solapamiento = fopen(filename, "w");
                 inicializar_nodos(matriz_nodos, -1);
-                algoritmo_hopfield(step_number, temp_nueva, matriz_nodos, array_patrones, f_salida, f_solapamiento, 1, 0);
+                algoritmo_hopfield(step_number, temp_nueva, matriz_nodos, array_patrones, f_salida, f_solapamiento, 1);
             }
         } else if (APARTADO == 3) {
             // EJERCICIO 3: Hacer lo mismo que en el punto 1 y 2 pero para varios patrones.
@@ -120,7 +120,7 @@
                         strcat(filename, extension);
                         f_solapamiento = fopen(filename, "w");
                         inicializar_nodos(matriz_nodos, -1);
-                        algoritmo_hopfield(step_number, temp_nueva, matriz_nodos, array_patrones, f_salida, f_solapamiento, n_patrones, 0);
+                        algoritmo_hopfield(step_number, temp_nueva, matriz_nodos, array_patrones, f_salida, f_solapamiento, n_patrones);
                     }    
             // ----------------[] Partiendo de b) El patrón deformado.     []---------------------
                     for (int k=0; k<10; k++) {
@@ -153,7 +153,7 @@
                         //Copiamos y alteramos
                         copiar_matriz(array_patrones[mu], matriz_nodos);
                         alterar_nodos(matriz_nodos,0.5);
-                        algoritmo_hopfield(step_number, temp_nueva, matriz_nodos, array_patrones, f_salida, f_solapamiento, n_patrones, 0);
+                        algoritmo_hopfield(step_number, temp_nueva, matriz_nodos, array_patrones, f_salida, f_solapamiento, n_patrones);
                     }
                 }
             }
@@ -162,7 +162,7 @@
             temp = 10e-4;
             N_MAX = 20;
 
-            for (int _n_experiencias = 0; _n_experiencias<2; _n_experiencias++){
+            for (int _n_experiencias = 0; _n_experiencias<20; _n_experiencias++){
                 //Generamos los patrones aleatorios
                 int array_patrones_aleatorios[N_MAX_PATRONES][N_MAX][N_MAX];
 
@@ -178,37 +178,31 @@
                 for (int n_patrones_activados=1; n_patrones_activados<N_MAX_PATRONES; n_patrones_activados++) {
                     inicializar_nodos(matriz_nodos, -1);
                     // ----------------[] Partiendo de a) Una condición aleatoria. []---------------------
-                    for (int mu=0; mu<n_patrones_activados; mu++){
-                        char mu_extension[10];
-                        sprintf(mu_extension, "%d", mu);
-                        char extension[12], number[24],  experiencia[24], filename[64];
-                        sprintf(experiencia, "%d", _n_experiencias);
-                        //Creamos el nombre de la extensión y del archivo
-                        strcpy(extension, ".txt");
-                        strcpy(filename, "Salida/datos_salida_4_");
-                        //Guardamos el nº de patrones actual en un string
-                        sprintf(number, "%d", n_patrones_activados);
-                        //Lo juntamos todo
-                        strcat(filename, number);
-                        strcat(filename, "_PATRON_");
-                        strcat(filename, mu_extension);
-                        strcat(filename, "_EXPERIENCIA_");
-                        strcat(filename, experiencia);
-                        strcat(filename, extension);
-                        f_salida = fopen(filename, "w");
+                    char mu_extension[10];
+                    char extension[12], number[24],  experiencia[24], filename[64];
+                    sprintf(experiencia, "%d", _n_experiencias);
+                    //Creamos el nombre de la extensión y del archivo
+                    strcpy(extension, ".txt");
+                    strcpy(filename, "Salida/datos_salida_4_");
+                    //Guardamos el nº de patrones actual en un string
+                    sprintf(number, "%d", n_patrones_activados);
+                    //Lo juntamos todo
+                    strcat(filename, number);
+                    strcat(filename, "_PATRON_");
+                    strcat(filename, mu_extension);
+                    strcat(filename, "_EXPERIENCIA_");
+                    strcat(filename, experiencia);
+                    f_salida = fopen(filename, "w");
 
-                        //Creamos el nombre del archivo
-                        strcpy(filename, "Salida/solapamiento_4_");
-                        //Lo juntamos todo
-                        strcat(filename, number);
-                        strcat(filename, "_PATRON_");
-                        strcat(filename, mu_extension);
-                        strcat(filename, "_EXPERIENCIA_");
-                        strcat(filename, experiencia);
-                        strcat(filename, extension);
-                        f_solapamiento = fopen(filename, "w");
-                        algoritmo_hopfield(step_number/2, temp, matriz_nodos, array_patrones_aleatorios, f_salida, f_solapamiento, n_patrones_activados, mu);
-                    }
+                    //Creamos el nombre del archivo
+                    strcpy(filename, "Salida/solapamiento_4_");
+                    //Lo juntamos todo
+                    strcat(filename, number);
+                    
+                    strcat(filename, "_EXPERIENCIA_");
+                    strcat(filename, experiencia);
+                    f_solapamiento = fopen(filename, "w");
+                    algoritmo_hopfield(step_number/2, temp, matriz_nodos, array_patrones_aleatorios, f_salida, f_solapamiento, n_patrones_activados);
                 }
             }
         }
@@ -236,13 +230,16 @@
         }
     }
 
-    void algoritmo_hopfield(int step_number, double temp, int matriz_nodos[][N_MAX], int array_patrones[][N_MAX][N_MAX], FILE* f_salida_matriz, FILE* f_salida_solapamiento, int n_patrones, int mu) {
+    void algoritmo_hopfield(int step_number, double temp, int matriz_nodos[][N_MAX], int array_patrones[][N_MAX][N_MAX], FILE* f_salida_matriz, FILE* f_salida_solapamiento, int n_patrones) {
         int monte_carlo_step = N_MAX*N_MAX;
         
         //Guardamos el resultado visual incial
         print_matriz(f_salida_matriz, matriz_nodos);
         //Calculamos el solapamiento
-        fprintf(f_salida_solapamiento, "%f\n", solapamiento(matriz_nodos, array_patrones, mu));
+        for (int mu = 0; mu < n_patrones; mu++){
+            fprintf(f_salida_solapamiento, "%d,%f\n", mu, solapamiento(matriz_nodos, array_patrones, mu));
+        }
+        fprintf(f_salida_solapamiento, "\n");
 
         //Ahora hacemos el bucle principal para step_number pasos Montecarlo
         for (int l=0; l < step_number; l++) {
@@ -261,7 +258,10 @@
             //Guardamos el resultado visual tras un paso monte carlo
             print_matriz(f_salida_matriz, matriz_nodos);
             //Calculamos el solapamiento
-            fprintf(f_salida_solapamiento, "%f\n", solapamiento(matriz_nodos, array_patrones, mu));
+            for (int mu = 0; mu < n_patrones; mu++){
+                fprintf(f_salida_solapamiento, "%d, %f\n", mu, solapamiento(matriz_nodos, array_patrones, mu));
+            }
+            fprintf(f_salida_solapamiento, "\n");
         }
 
         //Close the files
