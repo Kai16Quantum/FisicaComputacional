@@ -192,6 +192,7 @@
                     strcat(filename, mu_extension);
                     strcat(filename, "_EXPERIENCIA_");
                     strcat(filename, experiencia);
+                    strcat(filename, extension);
                     f_salida = fopen(filename, "w");
 
                     //Creamos el nombre del archivo
@@ -201,6 +202,7 @@
                     
                     strcat(filename, "_EXPERIENCIA_");
                     strcat(filename, experiencia);
+                    strcat(filename, extension);
                     f_solapamiento = fopen(filename, "w");
                     algoritmo_hopfield(step_number/2, temp, matriz_nodos, array_patrones_aleatorios, f_salida, f_solapamiento, n_patrones_activados);
                 }
