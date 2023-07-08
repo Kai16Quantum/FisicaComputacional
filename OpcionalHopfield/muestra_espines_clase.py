@@ -45,7 +45,7 @@ import io
 import os
 
 absolute_path = os.path.dirname(__file__)
-relative_path = "datos_salida.txt"
+relative_path = "muestra.txt"
 file_in = os.path.join(absolute_path, "Salida", relative_path)
 # Parámetros
 # ========================================

@@ -4,6 +4,7 @@ import numpy as np
 
 plt.style.use('seaborn')
 
+#Leemos.
 def leer_archivo(nombre_archivo):
     with open(nombre_archivo, 'r') as archivo:
         lineas = archivo.readlines()
@@ -11,17 +12,14 @@ def leer_archivo(nombre_archivo):
         for linea in lineas:
             y.append(abs(float(linea.strip())))
         
-        # Extraer la temperatura del nombre del archivo
+        # Obtenemos la temperatura del nombre.
         temperatura = float(nombre_archivo.split('_T')[1][:-4])
-        
         return y, temperatura
 
 def graficar_solapamiento(carpeta):
     carpeta = os.path.join(os.path.dirname(__file__),carpeta)
     fig, ax = plt.subplots()
     archivos = os.listdir(carpeta)
-    separacion_texto = 0.08
-    separacion_linea = 0.03
     max_x = -20
     temperaturas = []
     
@@ -33,29 +31,22 @@ def graficar_solapamiento(carpeta):
             max_x = max(max_x, len(x))
             temperaturas.append((temperatura, archivo, x, y))
     
-    temperaturas.sort(key=lambda x: x[0], reverse=True)  # Sort temperatures in reverse order
+    #Ordenamos las temperaturas
+    temperaturas.sort(key=lambda x: x[0], reverse=True)
     
 
     ax.set_xlabel('Número de pasos Monte Carlo (N^2)')
     ax.set_ylabel('Solapamiento')
 
-    # Create custom legend
-    custom_legend = []
+    leyenda = []
     for i, (temperatura, archivo, x, y) in enumerate(temperaturas):
         linea, = ax.plot(x, y)
-        
-        # Agregar línea de color junto al texto
-        color = linea.get_color()
-        # Create custom legend entry with temperature and color
-        legend_entry = f'T = {temperatura:.3f}K'
-        custom_legend.append(legend_entry)
+        nombre_leyenda = f'T = {temperatura:.3f}K'
+        #Creamos la leyenda con colores-
+        leyenda.append(nombre_leyenda)
 
-    # Add custom legend to the plot
-    ax.legend(custom_legend, loc='best', frameon=True, framealpha=0.8)
-
+    ax.legend(leyenda, loc='best', frameon=True, framealpha=0.8)
     plt.grid(True)
-    
-
     plt.savefig(os.path.join(os.path.dirname(__file__),"Salida/Solapamiento_Para_cada_T.png"))
     plt.show()
 

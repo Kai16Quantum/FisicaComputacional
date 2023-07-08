@@ -1,1 +1,1 @@
-{energia:.1f}
+# Mostramos los puntos.

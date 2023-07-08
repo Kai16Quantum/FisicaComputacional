@@ -1,5 +1,5 @@
 # ================================================================================
-# ANIMACION SISTEMA SOLAR
+# ANIMACION PENDULO
 #
 # Genera una animación a partir de un fichero de datos con las posiciones
 # de los pendulos en diferentes instantes de tiempo.

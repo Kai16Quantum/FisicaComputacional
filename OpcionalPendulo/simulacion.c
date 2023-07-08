@@ -1,13 +1,18 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
 
 const double g = 9.80665;
-const double h = 0.00001;
+const double h = 0.001;
 const int N = 4;
 const double PI = 3.141592653589;
+const int max_experiencias = 4;
+const int max_energias = 5;
+const double offset_angulo_experiencia = 0.14;
+const int numero_de_pasos = 4000000;
+const int imprimir_cada_x_pasos = 3;
+
 
 void f_derivadas(double[], double[], double);
 void runge_kutta(double[], double);
@@ -15,7 +20,6 @@ void mult_array(double[], double[], int, double);
 double hamiltoniano(double[], double);
 double hamiltoniano_derivadas(double[], double, double);
 double phi_punto_desde_energia(double, double, double);
-int ha_pasado_el_angulo(double, double);
 
 int main(){
     FILE *f_hamiltoniano;
@@ -26,8 +30,8 @@ int main(){
 
     
 
-    //Tomemos los valores iniciales
-    double array_energias[5] = {5.0,10.0,15.0};
+    // Inicializamos los valores.
+    double array_energias[5] = {1.0,3.0,5.0,10.0,15.0};
     double valores_iniciales[N];
     double t = 0.0;
     valores_iniciales[0] = 0.0;
@@ -35,21 +39,21 @@ int main(){
     valores_iniciales[2] = 0.0;
     valores_iniciales[3] = 0.0;
 
-    //Obtenemos el Phi punto con la energía y los ángulos iniciales.
+    // Obtenemos el Phi punto con la energía y los ángulos iniciales.
     double phi_punto = phi_punto_desde_energia(array_energias[0], valores_iniciales[0], valores_iniciales[1]);
-    //Obtenemos P_phi con Phi punto cuandoo Theta punto = 0
+    // Obtenemos P_phi con Phi punto cuandoo Theta punto = 0
     valores_iniciales[2] = 2.0*phi_punto;
-    //Obtenemos P_theta con Phi punto y theta punto
+    // Obtenemos P_theta con Phi punto y theta punto
     valores_iniciales[3] = phi_punto*cos(valores_iniciales[0]-valores_iniciales[1]);
-    //Por cada experiencia
-
-    for (int exp_n=0; exp_n<4; exp_n++){
+    // Por cada experiencia:
+    for (int exp_n=0; exp_n<max_experiencias; exp_n++){
         char exp_string[64] = "";
         sprintf(exp_string, "%d", exp_n);
 
-        //Para cada energía
-        for (int l=0; l<1; l++) {
-            valores_iniciales[0] = exp_n*0.14;
+        // Para cada energía
+        for (int l=0; l<max_energias; l++) {
+            t = 0.0;
+            valores_iniciales[0] = exp_n*offset_angulo_experiencia;
             valores_iniciales[1] = 0.0;
             phi_punto = phi_punto_desde_energia(array_energias[l], valores_iniciales[0], valores_iniciales[1]);
             valores_iniciales[2] = 2.0*phi_punto;
@@ -84,7 +88,7 @@ int main(){
             FILE* f_poincare = fopen(filename, "w");
 
             //Para un número de pasos determinado
-            for (int k = 0; k<4000000; k++) {
+            for (int k = 0; k<numero_de_pasos; k++) {
 
                 //CONTORNO
                 for (int i=0; i<2; i++) {
@@ -93,8 +97,8 @@ int main(){
                 }
 
 
-                //IMPRIMIR VALAORES
-                if (k%50 == 0){
+                //IMPRIMIR VALORES CADA X PASOS
+                if (k%imprimir_cada_x_pasos == 0){
                     for (int i=0; i<4; i++) {
                         fprintf(f_salida_datos, "%f,\t", valores_iniciales[i]);
                     }
@@ -158,8 +162,6 @@ void f_derivadas(double valores_iniciales[], double valores_finales[], double _t
     double h1 = (P_phi * P_theta * sin(phi - theta)) / ((1.0 + sin(phi - theta) * sin(phi - theta)));
     double h2 = (P_phi * P_phi + 2.0*P_theta * P_theta - 2.0 * P_phi * P_theta * cos(phi - theta)) / (2.0 * pow(1.0 + sin(phi - theta) * sin(phi - theta), 2.0));
 
-
-
     valores_finales[0] = (P_phi-P_theta*cos(phi-theta))/(1.0+sin(phi-theta)*sin(phi-theta));
     valores_finales[1] = (-P_phi*cos(phi-theta)+2.0*P_theta) / (1.0+sin(phi-theta)*sin(phi-theta));
     valores_finales[2] = -2.0*g*sin(phi)-h1+h2*sin(2.0*(phi-theta));
@@ -199,7 +201,7 @@ void runge_kutta(double array_valores[], double t) {
     return;
 }
 
-
+// -- Función ayudante, multiplica un array de un tamaño N por un double y lo escribe en otro array. --
 void mult_array(double array_valores[], double array_guardado[], int size, double mult) {
     for (int i=0; i<size; i++) {
         array_guardado[i] = array_valores[i] * mult;
@@ -233,17 +235,4 @@ double hamiltoniano_derivadas(double array_valores[], double phi, double theta) 
 double phi_punto_desde_energia(double E, double phi, double theta){
     float phi_punto = sqrt(E+2.0*g*cos(phi)+g*cos(theta));
     return phi_punto;
-}
-
-int ha_pasado_el_angulo(double previous_angle, double current_angle) {
-    // Normalize the angles to be between -π and π
-    previous_angle = fmod(previous_angle + PI, 2*PI) - PI;
-    current_angle = fmod(current_angle + PI, 2*PI) - PI;
-
-    // Check if the previous angle and current angle have opposite signs
-    if (copysign(1.0, previous_angle) != copysign(1.0, current_angle)) {
-        return 1;
-    } else {
-        return -1;
-    }
 }
