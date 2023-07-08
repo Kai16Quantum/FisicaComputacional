@@ -1,4 +1,4 @@
-# Algoritmo de Holpfield
+# Algoritmo de Hopfield
 
 Se muestra a continuación la evolución del sistema de la primera sección, partiendo de una condición aleatoria.
 
